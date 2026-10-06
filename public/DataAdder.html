@@ -206,8 +206,8 @@
                 // Determine if we're adding new data or updating existing
                 const isEditMode = form.dataset.editId !== undefined;
                 const url = isEditMode 
-                    ? `http://localhost:80/update-data/${form.dataset.editId}` 
-                    : 'http://localhost:80/add-data';
+                    ? `http://localhost:8080/update-data/${form.dataset.editId}` 
+                    : 'http://localhost:8080/add-data';
                 const method = isEditMode ? 'PUT' : 'POST';
 
                 // Use FormData for file uploads
