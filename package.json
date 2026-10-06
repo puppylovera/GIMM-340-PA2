@@ -2,6 +2,14 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "homepage": "https://github.com/puppylovera/GIMM-340-PA2#readme",
+  "bugs": {
+    "url": "https://github.com/puppylovera/GIMM-340-PA2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/puppylovera/GIMM-340-PA2.git"
+  },
   "license": "ISC",
   "author": "",
   "type": "commonjs",
@@ -15,5 +23,6 @@
     "multer": "^2.4.0",
     "mysql2": "^3.24.5",
     "promise": "^8.3.0"
-  }
+  },
+  "devDependencies": {}
 }
