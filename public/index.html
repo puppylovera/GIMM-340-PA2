@@ -10,8 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <link rel="styleSheet" href="C:\Users\ajhar\Desktop\Random Folders\HTML Stuff\GIMM 340 PA 2\GIMM 340 PA2\public\styleSheet.css">
-    <link rel="stylesheet" href="C:\Users\ajhar\Desktop\Random Folders\HTML Stuff\GIMM 340 PA 2\GIMM 340 PA2\public\styleSheet.css">
+    <link rel="stylesheet" href="/styleSheet.css">
 </head>
 
 <body id='default'>
@@ -162,7 +161,7 @@
             };
 
             //Send FETCH API request
-            fetch("http://localhost/worlds/" + (!isEmpty(getParameters) ? '?' + new URLSearchParams(getParameters) : ''), fetchSettings)
+            fetch("/worlds/" + (!isEmpty(getParameters) ? '?' + new URLSearchParams(getParameters) : ''), fetchSettings)
                 .then((response) => {
                     return new Promise((resolve) => response.json()
                         .then((json) => resolve({

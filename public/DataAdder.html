@@ -9,7 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-    <link rel="styleSheet" href="stylesheet.css">
+    <link rel="stylesheet" href="/styleSheet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -206,8 +206,8 @@
                 // Determine if we're adding new data or updating existing
                 const isEditMode = form.dataset.editId !== undefined;
                 const url = isEditMode 
-                    ? `http://localhost:8080/update-data/${form.dataset.editId}` 
-                    : 'http://localhost:8080/add-data';
+                    ? `/update-data/${form.dataset.editId}` 
+                    : '/add-data';
                 const method = isEditMode ? 'PUT' : 'POST';
 
                 // Use FormData for file uploads

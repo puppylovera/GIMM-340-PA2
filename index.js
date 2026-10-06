@@ -10,12 +10,12 @@ const path = require('path');
 //Setup defaults for script
 const app = express();
 app.use(express.json()); // Parse JSON bodies
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')))
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'public/uploads/')
+        cb(null, path.join(__dirname, 'public', 'uploads'))
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + '-' + file.originalname)
@@ -308,6 +308,6 @@ app.put(
     }
 );
 
-app.listen(port, () => {
-    console.log(`Application listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Application listening on port ${port}`);
 })
