@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage })
-const port = 80 //Default port to http server
+const port = 8080 //Default port to http server
 
 let connection = null;
 
