@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>A.J.H's Legends & Myths - New Entries</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link rel="styleSheet" href="stylesheet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body id='default'>
+    <div class="topnav mt-3">
+        <a href="index.html" class="active">A.J.H's Legends & Myths-New Enteries</a>
+        <!-- Navigation links (hidden by default) -->
+        <div id="myLinks">
+            <a href="index.html">Data</a>
+            <!-- <a href="#contact">Contact</a>
+            <a href="#about">About</a> -->
+        </div>
+        <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+    <form id="dataForm" class="mt-3">
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label for='title'>Title *</label>
+            </div>
+            <div class='col-md-6'>
+                <input id='title' name='title' type='text' class='form-control' required minlength="2"
+                    maxlength="255" />
+                <div class="invalid-feedback">Title is required (2-255 characters).</div>
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Is Article?</label>
+            </div>
+            <div class='col-md-6'>
+                <input id='article' name='isArticle' type='checkbox' />
+            </div>
+        </div>
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label for='newArticle'>Article</label>
+            </div>
+            <div class='col-md-6'>
+                <input id='newArticle' name='article' type='text' class='form-control' />
+                <div class="invalid-feedback">Article text is required when "Is Article" is checked.</div>
+            </div>
+        </div>
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Is Concept Art?</label>
+            </div>
+            <div class='col-md-6'>
+                <input id='art' name='isConceptArt' type='checkbox' />
+            </div>
+        </div>
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label for='newArt'>Concept Art</label>
+            </div>
+            <div class='col-md-3'>
+                <input id='newArt' name='conceptArt' type='file' class='form-control' />
+                <div class="invalid-feedback">Concept art URL is required when "Is Concept Art" is checked.</div>
+            </div>
+        </div>
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label for='worlds'>Select World *</label>
+            </div>
+            <div class='col-md-3'>
+                <select id='worlds' name='world' class='form-select' required>
+                    <option value=''>-- Select a World --</option>
+                    <option value='Technonatural'>Technonatural</option>
+                    <option value='The Loss Of Hope'>The Loss Of Hope</option>
+                    <option value='Pupstenia'>Pupstenia</option>
+                    <option value='Auditorium 7'>Auditorium 7</option>
+                    <option value='New Content Test'>New Content Test</option>
+                </select>
+                <div class="invalid-feedback">Please select a world.</div>
+            </div>
+        </div>
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label for='author'>Select Author *</label>
+            </div>
+            <div class='col-md-3'>
+                <select id='author' name='author' class='form-select' required>
+                    <option value=''>-- Select an Author --</option>
+                    <option value='Andrew Hartlein'>Andrew Hartlein</option>
+                    <option value='Thomas Brown'>Thomas Brown</option>
+                </select>
+                <div class="invalid-feedback">Please select an author.</div>
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-12'>
+                <button type='submit' id='submitBtn' class='btn btn-primary'>Submit</button>
+                <button type='reset' class='btn btn-secondary ms-2'>Reset</button>
+            </div>
+        </div>
+
+        <div id='message' class='alert mt-3' style='display: none;'></div>
+    </form>
+
+    <script>
+        function myFunction() {
+            let x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+        const form = document.getElementById('dataForm');
+        const messageDiv = document.getElementById('message');
+        const isArticleCheckbox = document.getElementById('article');
+        const isConceptArtCheckbox = document.getElementById('art');
+        const articleInput = document.getElementById('newArticle');
+        const conceptArtInput = document.getElementById('newArt');
+
+        // Check for edit data from index.html hover
+        const editData = localStorage.getItem('editData');
+        if (editData) {
+            const data = JSON.parse(editData);
+            if (data.isEdit) {
+                document.getElementById('title').value = data.title || '';
+                document.getElementById('article').checked = data.isArticle || false;
+                document.getElementById('newArticle').value = data.article || '';
+                document.getElementById('art').checked = data.isConceptArt || false;
+                document.getElementById('worlds').value = data.world || '';
+                document.getElementById('author').value = data.author || '';
+                
+                // Show conditional fields if checked
+                if (data.isArticle) {
+                    articleInput.parentElement.classList.remove('d-none');
+                    articleInput.required = true;
+                }
+                if (data.isConceptArt) {
+                    conceptArtInput.parentElement.classList.remove('d-none');
+                    conceptArtInput.required = true;
+                }
+                
+                // Change submit button text to indicate edit mode
+                document.getElementById('submitBtn').textContent = 'Update';
+                messageDiv.textContent = 'Editing existing entry - hover over data in Edit Mode to load different data';
+                messageDiv.classList.add('alert-info');
+                messageDiv.style.display = 'block';
+                
+                // Store the ID for update operations
+                form.dataset.editId = data.id;
+            }
+            // Clear the stored data after loading
+            localStorage.removeItem('editData');
+        }
+
+        // Show/hide conditional fields
+        isArticleCheckbox.addEventListener('change', function () {
+            articleInput.parentElement.classList.toggle('d-none', !this.checked);
+            articleInput.required = this.checked;
+        });
+
+        isConceptArtCheckbox.addEventListener('change', function () {
+            conceptArtInput.parentElement.classList.toggle('d-none', !this.checked);
+            conceptArtInput.required = this.checked;
+        });
+
+        // Initialize conditional fields as hidden
+        articleInput.parentElement.classList.add('d-none');
+        conceptArtInput.parentElement.classList.add('d-none');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Clear previous messages
+            messageDiv.style.display = 'none';
+            messageDiv.className = 'alert mt-3';
+
+            // Clear validation states
+            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            form.querySelectorAll('.is-valid').forEach(el => el.classList.remove('is-valid'));
+
+            // Build form data
+            const formData = new FormData(form);
+            const data = {
+                title: formData.get('title'),
+                isArticle: formData.get('isArticle') === 'on',
+                article: formData.get('article'),
+                isConceptArt: formData.get('isConceptArt') === 'on',
+                conceptArt: formData.get('conceptArt'),
+                world: formData.get('world'),
+                author: formData.get('author')
+            };
+
+            try {
+                // Determine if we're adding new data or updating existing
+                const isEditMode = form.dataset.editId !== undefined;
+                const url = isEditMode 
+                    ? `http://localhost:80/update-data/${form.dataset.editId}` 
+                    : 'http://localhost:80/add-data';
+                const method = isEditMode ? 'PUT' : 'POST';
+
+                // Use FormData for file uploads
+                const response = await fetch(url, {
+                    method: method,
+                    body: formData  // Don't set Content-Type - browser does it automatically
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    messageDiv.textContent = result.message || (isEditMode ? 'Data updated successfully!' : 'Data added successfully!');
+                    messageDiv.classList.add('alert-success');
+                    messageDiv.style.display = 'block';
+                    form.reset();
+                    articleInput.parentElement.classList.add('d-none');
+                    conceptArtInput.parentElement.classList.add('d-none');
+                    
+                    // Reset edit mode UI
+                    if (isEditMode) {
+                        document.getElementById('submitBtn').textContent = 'Submit';
+                        delete form.dataset.editId;
+                    }
+                } else {
+                    // Handle validation errors from server
+                    if (result.errors) {
+                        result.errors.forEach(error => {
+                            const field = document.querySelector(`[name="${error.path}"]`);
+                            if (field) {
+                                field.classList.add('is-invalid');
+                            }
+                        });
+                        messageDiv.textContent = 'Please fix the validation errors below.';
+                    } else {
+                        messageDiv.textContent = result.message || 'An error occurred.';
+                    }
+                    messageDiv.classList.add('alert-danger');
+                    messageDiv.style.display = 'block';
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Network error. Please try again.';
+                messageDiv.classList.add('alert-danger');
+                messageDiv.style.display = 'block';
+            }
+        });           
+    </script>
+
+</body>
+
+</html>

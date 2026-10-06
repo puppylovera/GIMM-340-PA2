@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Spring 2025 Course Schedule</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <link rel="styleSheet" href="stylesheet.css">
+    <link rel="stylesheet" href="GIMM 340 PA2/public/styleSheet.css">
+</head>
+
+<body id='default'>
+    <!-- Edit Mode Banner -->
+    <div id="editModeBanner" class="edit-mode-banner noDisplay">
+        Edit Mode-Click On The Data You Want To Edit
+    </div>
+    <div id="editModeNoteification" class="edit-mode-banner noDisplay">
+        successfully Got Data
+    </div>
+    <hr />
+    <!-- Top Navigation Menu -->
+    <div class="topnav mt-3">
+        <a href="index.html" class="active">A.J.H's Legends & Myths</a>
+        <!-- Navigation links (hidden by default) -->
+        <div id="myLinks">
+            <a href="DataAdder.html">Add New Data</a>
+            <label>Edit Mode</label>
+            <input id='editMode' type='checkbox' />
+        </div>
+        <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <div class="container" id="default">
+
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Title</label>
+            </div>
+            <div class='col-md-10'>
+                <input id='title' type='text' />
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Is Article?</label>
+            </div>
+            <div class='col-md-10'>
+                <input id='article' type='checkbox' />
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Is Concept Art?</label>
+            </div>
+            <div class='col-md-10'>
+                <input id='art' type='checkbox' />
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Filter by World</label>
+            </div>
+            <div class='col-md-10'>
+                <select id='worlds'>
+                    <option value=''>All Worlds</option>
+                    <option value='Technonatural'>Technonatural</option>
+                    <option value='The Loss Of Hope'>The Loss Of Hope</option>
+                    <option value='Pupstenia'>Pupstenia</option>
+                    <option value='Auditorium 7'>Auditorium 7</option>
+                    <option value='New Content Test'>New Content Test</option>
+                </select>
+            </div>
+        </div>
+        <div class='row mb-3'>
+            <div class='col-md-2'>
+                <label>Sort By Author</label>
+            </div>
+            <div class='col-md-10'>
+                <select id='author'>
+                    <option value='Andrew Hartlein'>Andrew Hartlein</option>
+                    <option value='Tohmas Brown'>Tohmas Brown</option>
+                </select>
+            </div>
+        </div>
+
+        <div class='row mb-3'>
+            <div class='col-md-12'>
+                <button id='search'>Search</button>
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <div id='spinner' class='spinner noDisplay'>
+        <div class='spinner-circle'></div>
+    </div>
+
+    <div id='content' class='overflow'>
+        Content Will Appear Here
+    </div>
+
+    <script>
+        const isEmpty = (obj) => Object.keys(obj).length === 0;
+
+        /* Toggle between showing and hiding the navigation menu links when the user clicks on the hamburger menu / bar icon */
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+
+        // Toggle edit mode banner
+        document.getElementById('editMode').addEventListener('change', (event) => {
+            const banner = document.getElementById('editModeBanner');
+            if (event.target.checked) {
+                banner.classList.remove('noDisplay');
+            } else {
+                banner.classList.add('noDisplay');
+            }
+        });
+
+        document.getElementById('search').addEventListener('click', (event) => {
+            // Show spinner when search starts
+            document.getElementById('spinner').classList.remove('noDisplay');
+
+            const getParameters = {};
+
+            if (document.getElementById('title').value.length !== 0) {
+                getParameters.title = document.getElementById('title').value;
+            }
+            if (document.getElementById('article').checked) {
+                getParameters.article = '1';
+            }
+            if (document.getElementById('art').checked) {
+                getParameters.art = '1';
+            }
+            if (document.getElementById('worlds').value.length !== 0) {
+                getParameters.world = document.getElementById('worlds').value;
+            }
+            if (document.getElementById('author').value.length !== 0) {
+                getParameters.author = document.getElementById('author').value;
+            }
+            //Settings for FETCH API request
+            let fetchSettings = {
+                method: 'GET'
+            };
+
+            //Send FETCH API request
+            fetch("http://localhost/worlds/" + (!isEmpty(getParameters) ? '?' + new URLSearchParams(getParameters) : ''), fetchSettings)
+                .then((response) => {
+                    return new Promise((resolve) => response.json()
+                        .then((json) => resolve({
+                            status: response.status,
+                            json,
+                        })
+                        ));
+                })
+                //Logic to display errors on form 
+                .then(({ status, json }) => {
+                    // Hide spinner when content loads
+                    document.getElementById('spinner').classList.add('noDisplay');
+
+                    if (status === 200) {
+                        let displayTable = '<table>' +
+                            '<thead>' +
+                            '<tr>' +
+                            '<th width="20%">Title</th>' +
+                            '<th width="20%">Article</th>' +
+                            '<th width="20%">Concept_Art</th>' +
+                            '<th width="20%">World</th>' +
+                            '<th width="20%">Author</th>' +
+                            '</tr>' +
+                            '</thead>' +
+                            '<tbody>';
+                        if (typeof json.data !== 'undefined') {
+                            for (row of json.data) {
+                                displayTable += '<tr data-id="' + row.id + '" data-label-title="' + encodeURIComponent(row.title) + '" data-article="' + encodeURIComponent(row.article || '') + '" data-concept-art="' + encodeURIComponent(row.concept_Art || '') + '" data-world="' + encodeURIComponent(row.world) + '" data-author="' + encodeURIComponent(row.author) + '">' +
+                                    '<td>' + row.title + '</td>' +
+                                    '<td>' + row.article + '</td>' +
+                                    '<td>' + row.concept_Art + '</td>' +
+                                    '<td>' + row.world + '</td>' +
+                                    '<td>' + row.author + '</td>' +
+                                    '</tr>';
+                            }
+                        }
+                        displayTable += '</tbody></table>';
+                        document.getElementById('content').innerHTML = displayTable;
+
+                        const editModeCheckbox = document.getElementById('editMode');
+
+                        document.querySelectorAll('#content tbody tr').forEach(row => {
+                            row.addEventListener('click', function () {
+                                const rowData = {
+                                    id: this.dataset.id,
+                                    title: decodeURIComponent(this.dataset.labelTitle),
+                                    article: decodeURIComponent(this.dataset.article),
+                                    conceptArt: decodeURIComponent(this.dataset.conceptArt),
+                                    world: decodeURIComponent(this.dataset.world),
+                                    author: decodeURIComponent(this.dataset.author)
+                                };
+
+                                if (editModeCheckbox.checked) {
+                                    rowData.isEdit = true;
+                                    localStorage.setItem('editData', JSON.stringify(rowData));
+                                    window.location.href = 'DataAdder.html';
+                                } else {
+                                    localStorage.setItem('viewData', JSON.stringify(rowData));
+                                    window.location.href = 'DataLoader.html';
+                                }
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+        });               
+    </script>
+</body>
+
+</html>
